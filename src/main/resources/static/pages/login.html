@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!--    引入样式-->
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../plugins/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+
+</head>
+
+
+<body>
+<div id="login_box">
+    <h2>LOGIN</h2>
+    <div id="app">
+        <el-form :model="form" :rules="rules" ref="form" label-width="100px" size="small"
+                 hide-required-asterisk="true">
+            <el-form-item label="用户名" prop="userid">
+                <el-col :span="20">
+                    <el-input class="input" v-model="form.AdminId" placeholder="用户名"></el-input>
+                </el-col>
+            </el-form-item>
+            <el-form-item label="密码" prop="password">
+                <el-col :span="20">
+                    <el-input placeholder="密码" v-model="form.Password" show-password></el-input>
+                </el-col>
+            </el-form-item>
+            <el-form-item>
+                <el-button style="margin-right: 15%" class="button" type="primary" round @click="onSubmit('form')">
+                    <span v-if="!loading">登录</span>
+                    <span v-else>登录中...</span>
+                </el-button>
+            </el-form-item>
+        </el-form>
+    </div>
+</div>
+
+<script src="../js/vue.js"></script>
+
+<script src="../plugins/element-ui/lib/index.js"></script>
+
+<script type="text/javascript" src="../js/jquery.min.js"></script>
+
+<script src="../js/axios-0.18.0.js"></script>
+
+<script src="../js/request.js"></script>
+
+
+<script>
+    let vue = new Vue({
+        el: '#app',
+        data() {
+            return {
+                form: {
+                    AdminId: '',
+                    Password: ''
+                },
+                loading: false,
+                rules: {
+                    AdminId: [
+                        { required: true, message: '请输入管理员id', trigger: 'blur' },
+                        { min: 6, max: 16, message: '长度在6到16个字符', trigger: 'blur' }
+                    ],
+                    Password: [
+                        { required: true, message: '请输入管理员密码', trigger: 'blur' },
+                        { min: 6, max: 16, message: '长度在6到16个字符', trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+
+        //钩子函数
+        create() {
+            this.resetForm();
+        },
+
+        methods: {
+
+            //重置表单
+            resetForm() {
+                this.form = {};
+            },
+
+            async onSubmit(form) {
+                // this.$refs 返回了一个对象，包含当前页面的所有 ref引用名称
+                this.$refs[form].validate((valid) => {
+                    if(valid) {
+                        this.loading = true;
+                        axios.post('/admin', this.form).then(res => {
+                            if (res.data.code == 10011) {
+                                localStorage.setItem('userInfo', JSON.stringify(res.data.data));
+                                window.location.href = '/pages/main.html';
+                                this.$message.success("登录成功!");
+                            } else if (res.data.code == 10010) {
+                                this.$message.error("登录失败，请检查用户名和密码是否正确!");
+                            } else {
+                                this.$message.error(res.data.msg);
+                            }
+                        }).finally(() => {
+                            this.resetForm();
+                            this.loading = false;
+                        })
+                        console.log(this.form);
+                    } else {
+                        this.$message.error("输入格式错误!");
+                        return false;
+                    }
+                });
+                //console.log('submit!');
+            }
+        }
+    })
+
+    //vue启动element
+    // var Ctor = Vue.extend(Main)
+    // new Ctor().$mount('#app')
+</script>
+
+</body>
+
+</html>

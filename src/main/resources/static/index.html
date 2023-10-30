@@ -1,0 +1,76 @@
+<script>window.location.href="/pages/login.html"</script>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Document</title>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>-->
+<!--</head>-->
+
+<!--<body>-->
+<!--<button id="get">发起单参数的get请求</button><br>-->
+<!--<button id="post">发起post请求</button>-->
+
+<!--<script>-->
+<!--    //用function包裹住的原因是？-->
+<!--    // $(function () {-->
+<!--    //     $('#get').on('click', function () {-->
+<!--    //         $.get("http://www.liulongbin.top:3006/api/getbooks", { id: 1100 }, function (res) {-->
+<!--    //             console.log(res);-->
+<!--    //         });-->
+<!--    //     })-->
+<!--    // });-->
+<!--    //ajax改写get请求-->
+<!--    $(function () {-->
+<!--        $('#get').on("click", function () {-->
+<!--            $.ajax({-->
+<!--                type: "get",-->
+<!--                url: "http://127.0.0.1:1234/api/user/list",-->
+<!--                data: {-->
+<!--                    id: 1-->
+<!--                },-->
+<!--                success: function (res) {-->
+<!--                    console.log(res);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--    // $(function () {-->
+<!--    //     $('#post').on('click', function () {-->
+<!--    //         $.post("http://www.liulongbin.top:3006/api/addbook",-->
+<!--    //             { bookname: "lln", author: "yu", publisher: "zhangguang" }, function (res) {-->
+<!--    //                 console.log(res);-->
+<!--    //             });-->
+<!--    //     })-->
+<!--    // });-->
+<!--    //ajax改写post请求-->
+<!--    $(function () {-->
+<!--        $('#post').on('click', function () {-->
+<!--            $.ajax({-->
+<!--                type: "post",-->
+<!--                // url: "http://www.liulongbin.top:3006/api/addbook",-->
+<!--                url: "http://localhost:8080/admin",-->
+<!--                // data: {-->
+<!--                //     bookname: "lln",-->
+<!--                //     author: "yu",-->
+<!--                //     publisher: "zhangguang"-->
+<!--                //  },-->
+<!--                data: {-->
+<!--                    AdminId: "yzg",-->
+<!--                    AdminPwd: "123456"-->
+<!--                },-->
+<!--                success: function (res) {-->
+<!--                    console.log(res);-->
+<!--                }-->
+<!--            });-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+<!--</body>-->
+
+<!--</html>-->

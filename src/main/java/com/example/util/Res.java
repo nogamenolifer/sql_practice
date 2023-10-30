@@ -8,6 +8,11 @@ public class Res {
     public Res() {
     }
 
+    public Res(Integer code, String msg) {
+        this.code = code;
+        this.msg = msg;
+    }
+
     public Res(Object data, Integer code, String msg) {
         this.data = data;
         this.code = code;
