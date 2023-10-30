@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>登录</title>
     <!--    引入样式-->
     <link rel="stylesheet" href="../css/login.css">
     <link rel="stylesheet" href="../plugins/element-ui/lib/theme-chalk/index.css">
@@ -91,11 +91,11 @@
                     if(valid) {
                         this.loading = true;
                         axios.post('/admin', this.form).then(res => {
-                            if (res.data.code == 10011) {
+                            if (res.data.code === 10011) {
                                 localStorage.setItem('userInfo', JSON.stringify(res.data.data));
-                                window.location.href = '/pages/main.html';
+                                window.location.href = 'users.html';
                                 this.$message.success("登录成功!");
-                            } else if (res.data.code == 10010) {
+                            } else if (res.data.code === 10010) {
                                 this.$message.error("登录失败，请检查用户名和密码是否正确!");
                             } else {
                                 this.$message.error(res.data.msg);

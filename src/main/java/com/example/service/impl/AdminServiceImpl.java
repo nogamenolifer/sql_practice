@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.example.dao.AdmDao;
 import com.example.domain.Admin;
+import com.example.domain.User;
 import com.example.exception.BusinessException;
 import com.example.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -24,5 +27,10 @@ public class AdminServiceImpl implements AdminService {
 //            throw new BusinessException(10001, "error");
 //        }
         return admin.equals(admDao.getById(admin.getAdminId()));
+    }
+
+    @Override
+    public List<User> getAll() {
+        return admDao.getAll();
     }
 }
