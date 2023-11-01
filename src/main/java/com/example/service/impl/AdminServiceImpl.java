@@ -6,11 +6,10 @@ import com.example.domain.User;
 import com.example.exception.BusinessException;
 import com.example.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
+
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
+
 import java.util.List;
 
 @Service
@@ -32,5 +31,20 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<User> getAll() {
         return admDao.getAll();
+    }
+
+    @Override
+    public User getById(String userid) {
+        return admDao.getByUserid(userid);
+    }
+
+    @Override
+    public boolean save(User user) {
+        return admDao.save(user) > 0;
+    }
+
+    @Override
+    public boolean delete(String userid) {
+        return admDao.delete(userid) > 0;
     }
 }

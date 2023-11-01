@@ -11,4 +11,10 @@ public interface AdminService {
     public boolean Login(Admin admin);
 
     public List<User> getAll();
+
+    public User getById(String userid);
+
+    public boolean save(User user);
+
+    public boolean delete(String userid);
 }

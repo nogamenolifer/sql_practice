@@ -42,15 +42,16 @@
 
                 <el-input placeholder="用户名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
 
-                <el-button @click="getAll()" class="dalfBut">查询</el-button>
+                <el-button @click="getAll()">查询</el-button>
 
-                <el-button type="primary" class="butT" @click="handleCreate()">新建</el-button>
+                <el-button type="primary" @click="handleCreate()">新建</el-button>
 
             </div>
 
-            <el-table size="small" current-row-key="name" :data="dataList" stripe highlight-current-row>
+<!--            是否为斑马纹，高亮当前行-->
+            <el-table size="small" current-row-key="userid" :data="dataList" stripe highlight-current-row>
 
-                <el-table-column type="userid" label="用户id" align="center"></el-table-column>
+                <el-table-column prop="userid" label="用户id" align="center"></el-table-column>
 
                 <el-table-column prop="password" label="用户密码" align="center"></el-table-column>
 
@@ -63,7 +64,7 @@
                 <el-table-column prop="status" label="状态" align="center"></el-table-column>
 
                 <el-table-column label="操作" align="center">
-
+<!--                 插槽   vue2组件获取table行数据-->
                     <template slot-scope="scope">
 
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -88,9 +89,9 @@
 
                             <el-col :span="12">
 
-                                <el-form-item label="用户id" prop="type">
+                                <el-form-item label="用户id" prop="userid">
 
-                                    <el-input v-model="formData.type"/>
+                                    <el-input v-model="formData.userid"/>
 
                                 </el-form-item>
 
@@ -98,9 +99,9 @@
 
                             <el-col :span="12">
 
-                                <el-form-item label="用户密码" prop="name">
+                                <el-form-item label="用户密码" prop="password">
 
-                                    <el-input v-model="formData.name"/>
+                                    <el-input v-model="formData.password"/>
 
                                 </el-form-item>
 
@@ -108,14 +109,52 @@
 
                         </el-row>
 
+                        <el-row>
+
+                            <el-col :span="8">
+
+                                <el-form-item label="手机号" prop="number">
+
+                                    <el-input v-model="formData.number"/>
+
+                                </el-form-item>
+
+                            </el-col>
+
+                            <el-col :span="8">
+
+                                <el-form-item label="性别" prop="gender">
+                                    <el-radio-group v-model="formData.gender">
+                                        <el-radio label="男"></el-radio>
+                                        <el-radio label="女"></el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+
+                            </el-col>
+
+                            <el-col :span="8">
+                                <el-form-item label="个人状态" prop="status">
+                                    <el-select v-model="formData.status" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+
+                            </el-col>
+
+                        </el-row>
 
                         <el-row>
 
                             <el-col :span="24">
 
-                                <el-form-item label="描述">
+                                <el-form-item label="兴趣爱好">
 
-                                    <el-input v-model="formData.description" type="textarea"></el-input>
+                                    <el-input v-model="formData.interest" type="textarea" :rows="4"></el-input>
 
                                 </el-form-item>
 
@@ -128,8 +167,8 @@
                     <div slot="footer" class="dialog-footer">
 
                         <el-button @click="dialogFormVisible = false">取消</el-button>
-
-                        <el-button type="primary" @click="handleAdd()">确定</el-button>
+<!--                        选择返回变量ref作为检验的值-->
+                        <el-button type="primary" @click="handleAdd('dataAddForm')">确定</el-button>
 
                     </div>
 
@@ -149,9 +188,9 @@
 
                             <el-col :span="12">
 
-                                <el-form-item label="图书类别" prop="type">
+                                <el-form-item label="用户id" prop="userid">
 
-                                    <el-input v-model="formData.type"/>
+                                    <el-input v-model="formData.userid"/>
 
                                 </el-form-item>
 
@@ -159,10 +198,48 @@
 
                             <el-col :span="12">
 
-                                <el-form-item label="图书名称" prop="name">
+                                <el-form-item label="用户密码" prop="password">
 
-                                    <el-input v-model="formData.name"/>
+                                    <el-input v-model="formData.password"/>
 
+                                </el-form-item>
+
+                            </el-col>
+
+                        </el-row>
+                        <el-row>
+
+                            <el-col :span="8">
+
+                                <el-form-item label="手机号" prop="number">
+
+                                    <el-input v-model="formData.number"/>
+
+                                </el-form-item>
+
+                            </el-col>
+
+                            <el-col :span="8">
+
+                                <el-form-item label="性别" prop="gender">
+                                    <el-radio-group v-model="formData.gender">
+                                        <el-radio label="男"></el-radio>
+                                        <el-radio label="女"></el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+
+                            </el-col>
+
+                            <el-col :span="8">
+                                <el-form-item label="个人状态" prop="status">
+                                    <el-select v-model="formData.status" placeholder="请选择">
+                                        <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
                                 </el-form-item>
 
                             </el-col>
@@ -173,9 +250,9 @@
 
                             <el-col :span="24">
 
-                                <el-form-item label="描述">
+                                <el-form-item label="兴趣">
 
-                                    <el-input v-model="formData.description" type="textarea"></el-input>
+                                    <el-input v-model="formData.interest" type="textarea" :rows="4"></el-input>
 
                                 </el-form-item>
 
@@ -227,9 +304,39 @@
             formData: {},//表单数据
             dialogFormVisible: false,//控制表单是否可见
             dialogFormVisible4Edit: false,//编辑表单是否可见
+            options: [{
+                value: '疲劳',
+                label: '疲劳'
+            }, {
+                value: '紧张',
+                label: '紧张'
+            }, {
+                value: '轻松',
+                label: '轻松'
+            }, {
+                value: '忧伤',
+                label: '忧伤'
+            }, {
+                value: '喜悦',
+                label: '喜悦'
+            }],
             rules: {//校验规则
-                type: [{required: true, message: '图书类别为必填项', trigger: 'blur'}],
-                name: [{required: true, message: '图书名称为必填项', trigger: 'blur'}]
+                userid: [
+                    {required: true, message: '用户id为必填项', trigger: 'blur'},
+                    { min: 8, max: 8, message: '长度为8个数字', trigger: 'blur' }
+                ],
+                password: [
+                    {required: true, message: '用户密码为必填项', trigger: 'blur'},
+                    { min: 6, max: 15, message: '长度为6到15个数字', trigger: 'blur' }
+                ],
+                number: [
+                    {required: true, message: '手机号码为必填项', trigger: 'blur'},
+                    { min: 11, max: 11, message: '长度为11个数字', trigger: 'blur' }
+                ],
+                gender: [
+                    {required: true, message: '性别为必选项', trigger: 'change'}
+                ]
+
             }
         },
 
@@ -278,29 +385,33 @@
             },
 
             //添加
-            handleAdd() {
-                axios.post("/books", this.formData).then((res) => {
-                    if (res.data.code == 20011) {
-                        this.dialogFormVisible = false;
-                        this.$message.success("添加成功!");
-                    } else if (res.data.code == 20010) {
-                        //this.dialogFormVisible = false;
-                        this.$message.error("添加失败!");
-                    } else {
-                        this.$message.error(res.data.msg);
+            handleAdd(formData) {
+                this.$refs[formData].validate((valid) => {
+                    if (valid) {
+                        axios.post("/admin/save", this.formData).then((res) => {
+                            if (res.data.code == 10041) {
+                                this.dialogFormVisible = false;
+                                this.$message.success("添加成功!");
+                            } else if (res.data.code == 10040) {
+                                //this.dialogFormVisible = false;
+                                this.$message.error("添加失败!");
+                            } else {
+                                this.$message.error(res.data.msg);
+                            }
+                        }).finally(() => {
+                            this.getAll();
+                        })
                     }
-                }).finally(() => {
-                    this.getAll();
                 })
             },
 
             //弹出编辑窗口
             handleUpdate(row) {
-                //console.log(row); //查询条件
+                console.log(row.userid); //查询条件
                 //查询数据
-                axios.get("/books/" + row.id).then((res) => {
+                axios.get("/admin/" + row.userid).then((res) => {
                     console.log(res.data.data);
-                    if (res.data.code == 20041) {
+                    if (res.data.code == 10031) {
                         this.formData = res.data.data;
                         this.dialogFormVisible4Edit = true;
                     } else {
@@ -331,10 +442,11 @@
                 this.$confirm("是否删除该条数据(不可恢复)", "提示", {
                     type: "info"
                 }).then(() => {
+                    console.log(row.userid);
                     //删除业务
-                    axios.delete("/books/" + row.id).then((res) => {
+                    axios.delete("/admin/" + row.userid).then((res) => {
                         console.log(res.data.data);
-                        if (res.data.code == 20021) {
+                        if (res.data.code === 10051) {
                             this.$message.success("删除成功!");
                         } else {
                             this.$message.error("删除失败!");
@@ -346,7 +458,6 @@
                 }).finally(() => {
                     this.getAll();
                 })
-                //
             }
         }
     });
