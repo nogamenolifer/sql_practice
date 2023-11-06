@@ -3,6 +3,10 @@ package com.example.controller;
 public class Code {
     //admin-code
 
+    public static final Integer ADMIN_VISIT_ERR = 10000;
+
+    public static final Integer ADMIN_LOGOUT_OK = 10001;
+
     public static final Integer ADMIN_LOGIN_OK = 10011;
 
     public static final Integer ADMIN_LOGIN_ERR = 10010;

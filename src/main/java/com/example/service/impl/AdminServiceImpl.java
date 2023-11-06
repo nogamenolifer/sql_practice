@@ -47,4 +47,9 @@ public class AdminServiceImpl implements AdminService {
     public boolean delete(String userid) {
         return admDao.delete(userid) > 0;
     }
+
+    @Override
+    public boolean update(User user) {
+        return admDao.update(user) > 0;
+    }
 }

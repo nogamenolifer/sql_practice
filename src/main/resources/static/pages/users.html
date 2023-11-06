@@ -30,7 +30,9 @@
 
     <div class="content-header">
 
-        <h1>用户管理</h1>
+        <h1 style="position:absolute;">用户管理</h1>
+
+        <el-button class="btn1" type="danger" round @click="logout()">登出</el-button>
 
     </div>
 
@@ -40,15 +42,18 @@
 
             <div class="filter-container">
 
-                <el-input placeholder="用户名称" v-model="pagination.queryString" style="width: 200px;" class="filter-item"></el-input>
+<!--                v-model用于监听数据变化-->
+                <el-input placeholder="用户名称" v-model="pagination.queryString" style="width: 200px;"
+                          class="filter-item"></el-input>
 
-                <el-button @click="getAll()">查询</el-button>
+                <el-button type="primary" icon="el-icon-search" @click="findById()">查询</el-button>
 
-                <el-button type="primary" @click="handleCreate()">新建</el-button>
+                <el-button type="primary" icon="el-icon-edit" @click="handleCreate()">新建</el-button>
+
 
             </div>
 
-<!--            是否为斑马纹，高亮当前行-->
+            <!--            是否为斑马纹，高亮当前行-->
             <el-table size="small" current-row-key="userid" :data="dataList" stripe highlight-current-row>
 
                 <el-table-column prop="userid" label="用户id" align="center"></el-table-column>
@@ -64,7 +69,7 @@
                 <el-table-column prop="status" label="状态" align="center"></el-table-column>
 
                 <el-table-column label="操作" align="center">
-<!--                 插槽   vue2组件获取table行数据-->
+                    <!--                 插槽   vue2组件获取table行数据-->
                     <template slot-scope="scope">
 
                         <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -83,7 +88,8 @@
 
                 <el-dialog title="新增用户" :visible.sync="dialogFormVisible">
 
-                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+                    <el-form ref="dataAddForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
 
                         <el-row>
 
@@ -167,7 +173,7 @@
                     <div slot="footer" class="dialog-footer">
 
                         <el-button @click="dialogFormVisible = false">取消</el-button>
-<!--                        选择返回变量ref作为检验的值-->
+                        <!--                        选择返回变量ref作为检验的值-->
                         <el-button type="primary" @click="handleAdd('dataAddForm')">确定</el-button>
 
                     </div>
@@ -182,7 +188,8 @@
 
                 <el-dialog title="编辑检查项" :visible.sync="dialogFormVisible4Edit">
 
-                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right" label-width="100px">
+                    <el-form ref="dataEditForm" :model="formData" :rules="rules" label-position="right"
+                             label-width="100px">
 
                         <el-row>
 
@@ -190,7 +197,7 @@
 
                                 <el-form-item label="用户id" prop="userid">
 
-                                    <el-input v-model="formData.userid"/>
+                                    <el-input v-model="formData.userid" :disabled="true"/>
 
                                 </el-form-item>
 
@@ -266,7 +273,7 @@
 
                         <el-button @click="dialogFormVisible4Edit = false">取消</el-button>
 
-                        <el-button type="primary" @click="handleEdit()">确定</el-button>
+                        <el-button type="primary" @click="handleEdit('dataEditForm')">确定</el-button>
 
                     </div>
 
@@ -323,15 +330,15 @@
             rules: {//校验规则
                 userid: [
                     {required: true, message: '用户id为必填项', trigger: 'blur'},
-                    { min: 8, max: 8, message: '长度为8个数字', trigger: 'blur' }
+                    {min: 8, max: 8, message: '长度为8个数字', trigger: 'blur'}
                 ],
                 password: [
                     {required: true, message: '用户密码为必填项', trigger: 'blur'},
-                    { min: 6, max: 15, message: '长度为6到15个数字', trigger: 'blur' }
+                    {min: 6, max: 15, message: '长度为6到15个数字', trigger: 'blur'}
                 ],
                 number: [
                     {required: true, message: '手机号码为必填项', trigger: 'blur'},
-                    { min: 11, max: 11, message: '长度为11个数字', trigger: 'blur' }
+                    {min: 11, max: 11, message: '长度为11个数字', trigger: 'blur'}
                 ],
                 gender: [
                     {required: true, message: '性别为必选项', trigger: 'change'}
@@ -344,33 +351,47 @@
         //钩子函数，VUE对象初始化完成后自动执行
         created() {
             //响应拦截器
-            // axios.interceptors.response.use( res => {
-            //     console.log("---响应拦截器---",res);
-            //     const code = res.data.code;
-            //     const msg = res.data.msg;
-            //     console.log("---code---",code);
-            //     // 响应状态码为 2xx 时触发成功的回调，形参中的 response 是“成功的结果”
-            //     if(res.data.code === 0 && res.data.msg === "NOTLOGIN") {
-            //         console.log("到达request");
-            //         localStorage.removeItem('userInfo');
-            //         window.top.location.href = '/pages/login.html';
-            //     } else {
-            //         return res;
-            //     }
-            // }, error => {
-            //     console.log("err:" + error);
-            //     return Promise.reject(error);
-            // });
+            axios.interceptors.response.use( res => {
+                console.log("---响应拦截器---",res);
+                const code = res.data.code;
+                console.log("---code---",code);
+                // 响应状态码为 2xx 时触发成功的回调，形参中的 response 是“成功的结果”
+                if(res.data.code === 10000) {
+                    console.log("非法访问成功被拦截！");
+                    //移除缓存重定位
+                    localStorage.removeItem('adminInfo');
+                    window.top.location.href = 'login.html';
+                } else {
+                    return res;
+                }
+            }, error => {
+                console.log("err:" + error);
+                return Promise.reject(error);
+            });
             this.getAll();
         },
 
         methods: {
-            //列表
+            //拉取列表
             getAll() {
                 axios.get("/admin").then((res) => {
-                    //发送ajax请求
                     this.dataList = res.data.data;
                 })
+            },
+
+            findById() {
+                if (this.pagination.queryString != null && this.pagination.queryString != "") {
+                    axios.get("/admin/" + this.pagination.queryString).then((res) => {
+                        console.log(res.data.data);
+                        if (res.data.code === 10031) {
+                            this.dataList = [res.data.data];
+                        } else {
+                            this.$message.error(res.data.msg);
+                        }
+                    })
+                }  else {
+                    this.getAll();
+                }
             },
 
             //弹出添加窗口
@@ -388,19 +409,22 @@
             handleAdd(formData) {
                 this.$refs[formData].validate((valid) => {
                     if (valid) {
-                        axios.post("/admin/save", this.formData).then((res) => {
-                            if (res.data.code == 10041) {
+                        axios.post("/admin", this.formData).then((res) => {
+                            if (res.data.code === 10041) {
                                 this.dialogFormVisible = false;
                                 this.$message.success("添加成功!");
-                            } else if (res.data.code == 10040) {
+                            } else if (res.data.code === 10040) {
                                 //this.dialogFormVisible = false;
-                                this.$message.error("添加失败!");
+                                this.$message.error(res.data.msg);
                             } else {
                                 this.$message.error(res.data.msg);
                             }
                         }).finally(() => {
                             this.getAll();
                         })
+                    } else {
+                        this.$message.error("未填写必要信息!");
+                        return false;
                     }
                 })
             },
@@ -411,7 +435,7 @@
                 //查询数据
                 axios.get("/admin/" + row.userid).then((res) => {
                     console.log(res.data.data);
-                    if (res.data.code == 10031) {
+                    if (res.data.code === 10031) {
                         this.formData = res.data.data;
                         this.dialogFormVisible4Edit = true;
                     } else {
@@ -421,18 +445,25 @@
             },
 
             //编辑
-            handleEdit() {
-                axios.put("/books", this.formData).then((res) => {
-                    if (res.data.code == 20031) {
-                        this.dialogFormVisible4Edit = false;
-                        this.$message.success("修改成功!");
-                    } else if (res.data.code == 20030) {
-                        this.$message.error("修改失败!");
+            handleEdit(formData) {
+                this.$refs[formData].validate((valid) => {
+                    if(valid) {
+                        axios.put("/admin", this.formData).then((res) => {
+                            if (res.data.code === 10061) {
+                                this.dialogFormVisible4Edit = false;
+                                this.$message.success("修改成功!");
+                            } else if (res.data.code === 10060) {
+                                this.$message.error("修改失败!");
+                            } else {
+                                this.$message.error(res.data.msg);
+                            }
+                        }).finally(() => {
+                            this.getAll();
+                        })
                     } else {
-                        this.$message.error(res.data.msg);
+                        this.$message.error("未填写必要信息!");
+                        return false;
                     }
-                }).finally(() => {
-                    this.getAll();
                 })
             },
 
@@ -457,6 +488,17 @@
                     this.$message.info("取消删除!");
                 }).finally(() => {
                     this.getAll();
+                })
+            },
+
+            logout() {
+                axios.post("/admin/logout").then(res => {
+                    console.log("logout!");
+                    if(res.data.code === 10001)
+                    {
+                        localStorage.removeItem('adminInfo');
+                        window.location.href = 'login.html';
+                    }
                 })
             }
         }

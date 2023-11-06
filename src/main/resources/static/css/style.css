@@ -179,6 +179,11 @@ a {
 
 }
 
+.btn1 {
+	position: relative;
+	left: 95%;
+}
+
 .box-body .nav>li>a {
 
 	color: #666

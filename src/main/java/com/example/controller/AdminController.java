@@ -35,12 +35,13 @@ public class AdminController {
             httpMethod = "POST",
             tags = "登录"
     )
-    @PostMapping
-    public Res login(@RequestBody Admin admin) {
-        System.out.println(admin);
+    @PostMapping("/login")
+    public Res login(HttpServletRequest request, @RequestBody Admin admin) {
+        log.info(admin.toString());
         log.info("进入管理控制层");
-        boolean flag  = adminService.Login(admin);
+        boolean flag = adminService.Login(admin);
         if (flag) {
+            request.getSession().setAttribute("admin", admin.getAdminId());
             return new Res(Code.ADMIN_LOGIN_OK, "登陆成功");
         } else {
             return new Res(Code.ADMIN_LOGIN_ERR, "密码错误，请检查用户名密码是否正确");
@@ -56,9 +57,9 @@ public class AdminController {
             tags = "登出"
     )
     @PostMapping("/logout")
-    public Res logout()
-    {
-        return new Res();
+    public Res logout(HttpServletRequest request) {
+        request.getSession().removeAttribute("admin");
+        return new Res(true, Code.ADMIN_LOGOUT_OK);
     }
 
     /**
@@ -84,11 +85,17 @@ public class AdminController {
             httpMethod = "POST",
             tags = "增加"
     )
-    @PostMapping("/save")
+    @PostMapping
     public Res save(@RequestBody User user) {
         log.info("进入添加用户控制层");
-        boolean flag = adminService.save(user);
-        return new Res(flag, flag ? Code.USER_SAVE_OK : Code.USER_SAVE_ERR);
+        boolean flag = false;
+        String msg = "添加失败";
+        if (adminService.getById(user.getUserid()) != null) {
+            msg = "用户id已存在";
+        } else {
+            flag = adminService.save(user);
+        }
+        return new Res(flag, flag ? Code.USER_SAVE_OK : Code.USER_SAVE_ERR, msg);
     }
 
 
@@ -97,7 +104,7 @@ public class AdminController {
      * @return boolean
      */
     @ApiOperation(value = "删除用户",
-            httpMethod = "GET",
+            httpMethod = "DELETE",
             tags = "删除"
     )
     @DeleteMapping("/{userid}")
@@ -122,6 +129,23 @@ public class AdminController {
         Integer code = user != null ? Code.USER_GET_OK : Code.USER_GET_ERR;
         String msg = user != null ? "" : "数据查询错误";
         return new Res(user, code, msg);
+    }
+
+
+    /**
+     * @param user
+     * @return boolean
+     */
+    @ApiOperation(value = "更新用户数据",
+            httpMethod = "PUT",
+            tags = "更新"
+    )
+    @PutMapping
+    public Res update(@RequestBody User user) {
+        log.info("进入更新控制层");
+        System.out.println(user);
+        boolean flag = adminService.update(user);
+        return new Res(flag, flag ? Code.USER_UPDATE_OK : Code.USER_UPDATE_ERR);
     }
 
 }

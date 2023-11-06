@@ -2,10 +2,7 @@ package com.example.dao;
 
 import com.example.domain.Admin;
 import com.example.domain.User;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -27,4 +24,8 @@ public interface AdmDao {
 
     @Delete("delete from user_info where userid = #{userid}")
     int delete(String userid);
+
+    @Update("update user_info set password = #{password}, gender = #{gender}," +
+            " number = #{number}, interest = #{interest}, status = #{status} where userid = #{userid}")
+    int update(User user);
 }
